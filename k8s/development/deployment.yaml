@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: genesis-development
+  name: genesis-api-auth
+  labels:
+    app: genesis-api-auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: genesis-api-auth
+  template:
+    metadata:
+      labels:
+        app: genesis-api-auth
+    spec:
+      containers:
+      - name: genesis-api-auth
+        image: sa-saopaulo-1.ocir.io/grj9gtpq5dke/genesis-api-auth:${CI_COMMIT_BRANCH}-${CI_PIPELINE_ID}
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          valueFrom:
+            configMapKeyRef:
+              name: genesis-api-auth-config
+              key: SPRING_PROFILES_ACTIVE
+        ports:
+        - containerPort: 8000
+      imagePullSecrets:
+        - name: oc-integrada

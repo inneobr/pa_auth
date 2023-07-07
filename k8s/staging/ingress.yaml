@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: genesis-staging
+  name: genesis-ingress-api-auth
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  tls:
+  - hosts:
+    - genesis.integrada.coop.br
+    secretName: integrada-23
+  rules:
+  - host: genesis.integrada.coop.br
+    http:
+      paths:
+      - pathType: Prefix
+        path: /agricola/auth/v1/
+        backend:
+          service:
+            name: genesis-api-auth
+            port:
+              number: 8001
+      - pathType: Prefix
+        path: /authentication/login
+        backend:
+          service:
+            name: genesis-api-auth
+            port:
+              number: 8001
+      - pathType: Prefix
+        path: /swagger-pa-auth
+        backend:
+          service:
+            name: genesis-api-auth
+            port:
+              number: 8001
